@@ -88,6 +88,15 @@
           ]
         }
       }
+    },
+    "release": {
+      "executor": "@theunderscorer/nx-semantic-release:semantic-release",
+      "options": {
+        "npm": false,
+        "github": true,
+        "changelog": true,
+        "tagFormat": "minimal-home-v${VERSION}"
+      }
     }
   },
   "tags": []
