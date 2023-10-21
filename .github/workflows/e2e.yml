@@ -30,9 +30,7 @@ jobs:
       # Label used to access the service container
       db:
         # Docker Hub image
-        # Warning: One must select an explicit version tag for multi-platform support.
-        # The default tag ony supports linux/amd64
-        image: supabase/postgres:15.1.0.129
+        image: postgres:15-alpine3.17
         # pass env vars needed for postgres startup
         env:
           POSTGRES_DB: test

@@ -2,14 +2,8 @@ version: '3.1'
 
 services:
   db:
-    # Use a postgres image with built-in support for many useful extensions.
-    # see: <https://github.com/supabase/postgres#extensions>
-    #
-    # Warning: One must select an explicit version tag for multi-platform support.
-    # The default tag ony supports linux/amd64
-    image: supabase/postgres:15.1.0.129
-    # start postgress with the supabase config, including sane defaults for all extensions
-    command: postgres -c config_file=/etc/postgresql/postgresql.conf
+    # Use postgres development db.
+    image: postgres:15-alpine3.17
     ports:
       - 5432:5432
     environment:
