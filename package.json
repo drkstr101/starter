@@ -8,7 +8,9 @@
     "lint": "nx format:check && nx run-many --target=lint --parallel --fix",
     "test": "nx run-many --target=test --parallel --coverage -- --runInBand",
     "build": "nx run-many --target=build --parallel",
-    "start": "nx run-many --target=serve --parallel --build-libs-from-source",
+    "start": "yarn start:services && yarn start:apps",
+    "start:apps": "nx run-many --target=serve --parallel",
+    "start:services": "docker compose up --detach",
     "e2e": "nx run cypress:e2e --skip-nx-cache"
   },
   "dependencies": {
