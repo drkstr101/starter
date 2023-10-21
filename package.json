@@ -8,6 +8,7 @@
     "lint": "nx format:check && nx run-many --target=lint --parallel --fix",
     "test": "nx run-many --target=test --parallel --coverage -- --runInBand",
     "build": "nx run-many --target=build --parallel",
+    "build:containers": "nx run-many --target=container --parallel",
     "start": "yarn start:services && yarn start:apps",
     "start:apps": "nx run-many --target=serve --parallel",
     "start:services": "docker compose up --detach",
@@ -21,6 +22,8 @@
     "tslib": "^2.3.0"
   },
   "devDependencies": {
+    "@nx-tools/container-metadata": "^5.0.3",
+    "@nx-tools/nx-container": "^5.0.3",
     "@nx/cypress": "17.0.1",
     "@nx/eslint": "17.0.1",
     "@nx/eslint-plugin": "17.0.1",
