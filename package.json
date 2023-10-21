@@ -9,9 +9,7 @@
     "test": "nx run-many --target=test --parallel --coverage -- --runInBand",
     "build": "nx run-many --target=build --parallel",
     "build:containers": "nx run-many --target=container --parallel",
-    "start": "yarn start:services && yarn start:apps",
-    "start:apps": "nx run-many --target=serve --parallel",
-    "start:services": "docker compose up --detach",
+    "start": "docker compose up db --detach && nx run-many --target=serve --parallel",
     "e2e": "nx run cypress:e2e --skip-nx-cache",
     "prepare": "husky install"
   },
