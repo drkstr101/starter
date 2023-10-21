@@ -4,6 +4,8 @@
 
 ## Getting Started
 
+[![Open in Gitpod](https://gitpod.io/button/open-in-gitpod.svg)](https://gitpod.io/#https://github.com/drkstr101/prism-next)
+
 ### Start the app
 
 To start the development server run `yarn nx serve home`. Open your browser and navigate to <http://localhost:4200/>.
