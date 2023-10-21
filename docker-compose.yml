@@ -2,10 +2,12 @@ version: '3.1'
 
 services:
   db:
-    # Use a postgres image with built-in support for many useful extensions. One must select an
-    # explicit version tag to resolve images for both linux/amd64 or linux/arm64, depending on the
-    # value of `DOCKER_DEFAULT_PLATFORM`. see: <https://github.com/supabase/postgres#extensions>
-    image: supabase/postgres:15.1.0.124
+    # Use a postgres image with built-in support for many useful extensions.
+    # see: <https://github.com/supabase/postgres#extensions>
+    #
+    # Warning: One must select an explicit version tag for multi-platform support.
+    # The default tag ony supports linux/amd64
+    image: supabase/postgres:15.1.0.129
     # start postgress with the supabase config, including sane defaults for all extensions
     command: postgres -c config_file=/etc/postgresql/postgresql.conf
     ports:
@@ -23,12 +25,12 @@ services:
 
   # Runs a PGAdminer web instance on port 8080. Be sure to select postgres as the
   # database then use the info above to login at the hostname `db`.
-  # adminer:
-  #   image: adminer
-  #   depends_on:
-  #     - db
-  #   ports:
-  #     - 8080:8080
+  adminer:
+    image: adminer
+    depends_on:
+      - db
+    ports:
+      - 8080:8080
 
 volumes:
   db-data:
