@@ -5,6 +5,7 @@
     "firsttris.vscode-jest-runner",
     "dbaeumer.vscode-eslint",
     "timonwong.shellcheck",
-    "davidanson.vscode-markdownlint"
+    "davidanson.vscode-markdownlint",
+    "stylelint.vscode-stylelint"
   ]
 }

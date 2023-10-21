@@ -23,6 +23,15 @@
       "options": {
         "lintFilePatterns": ["apps/cypress/**/*.{js,ts}"]
       }
+    },
+    "release": {
+      "executor": "@theunderscorer/nx-semantic-release:semantic-release",
+      "options": {
+        "tagFormat": "minimal-cypress-v${VERSION}",
+        "github": true,
+        "changelog": true,
+        "npm": false
+      }
     }
   },
   "tags": [],
