@@ -2105,6 +2105,15 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@nrwl/node@npm:17.0.1":
+  version: 17.0.1
+  resolution: "@nrwl/node@npm:17.0.1"
+  dependencies:
+    "@nx/node": 17.0.1
+  checksum: 9f7cea2f465c9e3732014cf75bede964b2924d6f5bf0847ec0843dcee8b5693272e011579567b02fd60543f8004de156ed28cbaebe6f0f4ad561bacfada8bd54
+  languageName: node
+  linkType: hard
+
 "@nrwl/react@npm:17.0.1":
   version: 17.0.1
   resolution: "@nrwl/react@npm:17.0.1"
@@ -2323,6 +2332,20 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@nx/node@npm:17.0.1, @nx/node@npm:^17.0.1":
+  version: 17.0.1
+  resolution: "@nx/node@npm:17.0.1"
+  dependencies:
+    "@nrwl/node": 17.0.1
+    "@nx/devkit": 17.0.1
+    "@nx/eslint": 17.0.1
+    "@nx/jest": 17.0.1
+    "@nx/js": 17.0.1
+    tslib: ^2.3.0
+  checksum: 9b360d29f7aee7e1eb18ea1458ac4b7817198437df1fde9c98a629cd7e42dd3639dfb1a24d99a28a0678733b6bceaa756c7a34a3873615fdad595a9df657305d
+  languageName: node
+  linkType: hard
+
 "@nx/nx-darwin-arm64@npm:17.0.1":
   version: 17.0.1
   resolution: "@nx/nx-darwin-arm64@npm:17.0.1"
@@ -2513,6 +2536,7 @@ __metadata:
     "@nx/jest": 17.0.1
     "@nx/js": 17.0.1
     "@nx/next": 17.0.1
+    "@nx/node": ^17.0.1
     "@nx/react": 17.0.1
     "@nx/workspace": 17.0.1
     "@swc-node/register": ~1.6.7
@@ -2536,6 +2560,7 @@ __metadata:
     eslint-plugin-react-hooks: 4.6.0
     jest: ^29.4.1
     jest-environment-jsdom: ^29.4.1
+    jest-environment-node: ^29.4.1
     next: 13.4.1
     nx: 17.0.1
     prettier: ^2.6.2
@@ -7392,7 +7417,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"jest-environment-node@npm:^29.7.0":
+"jest-environment-node@npm:^29.4.1, jest-environment-node@npm:^29.7.0":
   version: 29.7.0
   resolution: "jest-environment-node@npm:29.7.0"
   dependencies:
