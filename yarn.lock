@@ -3560,7 +3560,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@nx/web@npm:17.0.1":
+"@nx/web@npm:17.0.1, @nx/web@npm:^17.0.1":
   version: 17.0.1
   resolution: "@nx/web@npm:17.0.1"
   dependencies:
@@ -4699,6 +4699,7 @@ __metadata:
     "@nx/react": 17.0.1
     "@nx/storybook": ^17.0.1
     "@nx/vite": ^17.0.1
+    "@nx/web": ^17.0.1
     "@nx/workspace": 17.0.1
     "@storybook/addon-essentials": ^7.5.1
     "@storybook/core-server": ^7.5.1
