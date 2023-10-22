@@ -1,7 +1,17 @@
 name: CI
 
 on:
+  push:
+    branches:
+      - main
   pull_request:
+
+env:
+  NX_CLOUD_DISTRIBUTED_EXECUTION: true
+  NX_BRANCH: ${{ github.event.number || github.ref_name }}
+  NX_CLOUD_ACCESS_TOKEN: ${{ secrets.NX_CLOUD_ACCESS_TOKEN }}
+  NX_CLOUD_AUTH_TOKEN: ${{ secrets.NX_CLOUD_AUTH_TOKEN }}
+  NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
 
 # Needed for nx-set-shas within nx-cloud-main.yml, when run on the main branch
 permissions:
@@ -19,12 +29,14 @@ jobs:
       number-of-agents: 3
       init-commands: |
         yarn nx-cloud start-ci-run --stop-agents-after="build" --agent-count=3
+        yarn docker:login
       parallel-commands: |
         yarn nx-cloud record -- yarn nx format:check
       parallel-commands-on-agents: |
         yarn nx affected --target=lint --parallel=3
         yarn nx affected --target=test --parallel=3 --ci --code-coverage -- --runInBand
         yarn nx affected --target=build --parallel=3
+        yarn nx affected --target=container --parallel=3 --push
 
   agents:
     name: CI - Agents
