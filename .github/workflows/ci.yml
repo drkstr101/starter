@@ -5,6 +5,7 @@ on:
     branches:
       - main
   pull_request:
+  workflow_dispatch:
 
 env:
   NX_CLOUD_DISTRIBUTED_EXECUTION: true
@@ -19,8 +20,8 @@ permissions:
   contents: read
 
 jobs:
-  main:
-    name: CI - Main Job
+  check:
+    name: CI - Check Code Quality
     # use the nx-cloud template to run parallel tasks on seperate agents
     uses: nrwl/ci/.github/workflows/nx-cloud-main.yml@v0.13.1
     with:
@@ -29,17 +30,52 @@ jobs:
       number-of-agents: 3
       init-commands: |
         yarn nx-cloud start-ci-run --stop-agents-after="build" --agent-count=3
-        yarn docker:login
       parallel-commands: |
         yarn nx-cloud record -- yarn nx format:check
       parallel-commands-on-agents: |
         yarn nx affected --target=lint --parallel=3
         yarn nx affected --target=test --parallel=3 --ci --code-coverage -- --runInBand
         yarn nx affected --target=build --parallel=3
-        yarn nx affected --target=container --parallel=3 --push
 
   agents:
-    name: CI - Agents
+    name: CI - Setup Build Agents
     uses: nrwl/ci/.github/workflows/nx-cloud-agents.yml@v0.13.1
     with:
       number-of-agents: 3
+
+  containers:
+    name: CI - Build Containers
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+        name: Checkout [Pull Request]
+        if: ${{ github.event_name == 'pull_request' }}
+        with:
+          # By default, PRs will be checked-out based on the Merge Commit, but we want the actual branch HEAD.
+          ref: ${{ github.event.pull_request.head.sha }}
+          # We need to fetch all branches and commits so that Nx affected has a base to compare against.
+          fetch-depth: 0
+
+      - uses: actions/checkout@v3
+        name: Checkout [Default Branch]
+        if: ${{ github.event_name != 'pull_request' }}
+        with:
+          # We need to fetch all branches and commits so that Nx affected has a base to compare against.
+          fetch-depth: 0
+
+      - name: Derive appropriate SHAs for base and head for `nx affected` commands
+        uses: nrwl/nx-set-shas@v3
+        with:
+          # Change this to the target base branch for comparison, if needed
+          main-branch-name: main
+
+      # Auto-authenticate with github container registry
+      - name: Login to GitHub Container Registry
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: 'Build Production Containers'
+        run: yarn nx affected --target=container --parallel=3 --push
