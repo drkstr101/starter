@@ -63,6 +63,23 @@ jobs:
           # We need to fetch all branches and commits so that Nx affected has a base to compare against.
           fetch-depth: 0
 
+      # Set node/npm/yarn versions using volta
+      - uses: volta-cli/action@v4
+        with:
+          package-json-path: '${{ github.workspace }}/package.json'
+
+      # Use package manager cache for faster installs
+      - name: Use the package manager cache if available
+        uses: actions/cache@v3
+        with:
+          path: '${{ github.workspace }}/.yarn/cache'
+          key: ${{ runner.os }}-${{ hashFiles('**/yarn.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-
+
+      - name: Install dependencies
+        run: yarn --frozen-lockfile
+
       - name: Derive appropriate SHAs for base and head for `nx affected` commands
         uses: nrwl/nx-set-shas@v3
         with:
@@ -70,12 +87,13 @@ jobs:
           main-branch-name: main
 
       # Auto-authenticate with github container registry
-      - name: Login to GitHub Container Registry
+      - name: Login to GitHub container registry
         uses: docker/login-action@v3
         with:
           registry: ghcr.io
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: 'Build Production Containers'
+      # Build all images and push to registry
+      - name: Build production containers
         run: yarn nx affected --target=container --parallel=3 --push
