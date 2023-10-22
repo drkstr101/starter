@@ -57,3 +57,8 @@ Thumbs.db
 .env.*
 !.env.example
 config/local-*.*
+
+.env*
+.flaskenv*
+!.env.project
+!.env.vault

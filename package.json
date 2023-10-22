@@ -12,7 +12,9 @@
     "start": " nx run-many --target=serve --parallel",
     "e2e": "nx run cypress:e2e --skip-nx-cache",
     "prepare": "husky install",
-    "docker:login": "echo ${GITHUB_TOKEN} | docker login ghcr.io -u ${GITHUB_USER} --password-stdin"
+    "docker:login": "echo ${GITHUB_TOKEN} | docker login ghcr.io -u ${GITHUB_USER} --password-stdin",
+    "env:pull": "dotenv-vault pull",
+    "env:push": "dotenv-vault push"
   },
   "dependencies": {
     "@nx/next": "17.0.1",
@@ -58,6 +60,7 @@
     "babel-jest": "^29.4.1",
     "cypress": "^13.0.0",
     "dotenv": "^16.3.1",
+    "dotenv-vault": "^1.25.0",
     "eslint": "~8.46.0",
     "eslint-config-next": "13.4.1",
     "eslint-config-prettier": "^9.0.0",
