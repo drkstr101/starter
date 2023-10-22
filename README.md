@@ -24,7 +24,7 @@ pre-configured for VSCode.
 
 ### Start the app
 
-To start all applications and services for development run `yarn start`. Open your browser and navigate to <http://localhost:4200/>.
+To start all applications and services for development run `docker compose up --detach && yarn start`. Open your browser and navigate to <http://localhost:4200/>.
 
 ### Generate code
 
