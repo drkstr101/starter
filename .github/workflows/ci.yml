@@ -46,19 +46,25 @@ jobs:
           password: ${{ secrets.GITHUB_TOKEN }}
 
       # Checkout rules on pull-requests
-      - name: Checkout project files [Pull Request]
-        uses: actions/checkout@v3
-        if: ${{ github.event_name == 'pull_request' }}
-        with:
-          # By default, PRs will be checked-out based on the Merge Commit, but we want the actual branch HEAD.
-          ref: ${{ github.event.pull_request.head.sha }}
-          # We need to fetch all branches and commits so that Nx affected has a base to compare against.
-          fetch-depth: 0
+      # - name: Checkout project files [Pull Request]
+      #   uses: actions/checkout@v3
+      #   if: ${{ github.event_name == 'pull_request' }}
+      #   with:
+      #     # By default, PRs will be checked-out based on the Merge Commit, but we want the actual branch HEAD.
+      #     ref: ${{ github.event.pull_request.head.sha }}
+      #     # We need to fetch all branches and commits so that Nx affected has a base to compare against.
+      #     fetch-depth: 0
 
       # Checkout rules for default branches
-      - name: Checkout project files [Default Branch]
+      # - name: Checkout project files [Default Branch]
+      #   uses: actions/checkout@v3
+      #   if: ${{ github.event_name != 'pull_request' }}
+      #   with:
+      #     # We need to fetch all branches and commits so that Nx affected has a base to compare against.
+      #     fetch-depth: 0
+
+      - name: Checkout project files
         uses: actions/checkout@v3
-        if: ${{ github.event_name != 'pull_request' }}
         with:
           # We need to fetch all branches and commits so that Nx affected has a base to compare against.
           fetch-depth: 0
