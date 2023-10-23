@@ -32,7 +32,7 @@
     },
     "container": {
       "cache": true,
-      "inputs": ["default", "production"]
+      "inputs": ["default", "production", "^production"]
     }
   },
   "namedInputs": {
