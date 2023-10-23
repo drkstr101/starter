@@ -27,8 +27,8 @@ jobs:
       # set working branch to main
       main-branch-name: main
       number-of-agents: 3
-      environment-variables:
-        # Make the GITHUB_TOKEN available to running nx tasks
+      # Make the GITHUB_TOKEN available to running nx tasks
+      environment-variables: |
         GITHUB_TOKEN=${{ secrets.GITHUB_TOKEN }}
       init-commands: |
         yarn nx-cloud start-ci-run --stop-agents-after="container" --agent-count=3
