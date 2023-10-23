@@ -15,17 +15,44 @@ jobs:
   main:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
+      - name: Checkout project files [Pull Request]
+        uses: actions/checkout@v3
+        if: ${{ github.event_name == 'pull_request' }}
         with:
+          # By default, PRs will be checked-out based on the Merge Commit, but we want the actual branch HEAD.
+          ref: ${{ github.event.pull_request.head.sha }}
+          # We need to fetch all branches and commits so that Nx affected has a base to compare against.
           fetch-depth: 0
-      - uses: nrwl/nx-set-shas@v3
-      - run: yarn install --frozen-lockfile
 
-      - name: Run pipeline commands
-        run: |
-          yarn nx format:check
-          yarn nx affected --parallel --target=lint
-          yarn nx affected --parallel --target=test --coverage
-          yarn nx affected --parallel --target=build
-          yarn nx affected --parallel --target=container --push
-          exit 0
+      - name: Checkout project files [Default Branch]
+        uses: actions/checkout@v3
+        if: ${{ github.event_name != 'pull_request' }}
+        with:
+          # We need to fetch all branches and commits so that Nx affected has a base to compare against.
+          fetch-depth: 0
+
+      - name: Calculate SHAs for base and head
+        uses: nrwl/nx-set-shas@v3
+
+      - name: Use the package manager cache
+        uses: actions/cache@v3
+        with:
+          path: '${{ github.workspace }}/.yarn/cache'
+          key: ${{ runner.os }}-${{ hashFiles('**/yarn.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-
+
+      - name: Install project dependencies with yarn
+        run: yarn install --frozen-lockfile
+
+      - name: Check code style
+        run: node_modules/.bin/nx format:check --base=${NX_BASE} --head=${NX_HEAD}
+
+      - name: Check code quality
+        run: node_modules/.bin/nx affected --target=lint --base=${NX_BASE} --head=${NX_HEAD} --parallel
+
+      - name: Run unit tests
+        run: node_modules/.bin/nx affected --target=test --base=${NX_BASE} --head=${NX_HEAD} --parallel --coverage
+
+      - name: Build release artifacts
+        run: node_modules/.bin/nx affected --target=build --base=${NX_BASE} --head=${NX_HEAD} --parallel
