@@ -13,9 +13,16 @@ env:
   GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
 # Needed for nx-set-shas within nx-cloud-main.yml, when run on the main branch
+# And to push packages to GitHub container registry. All others may possibly be
+# used in further iterations of the pipeline.
 permissions:
-  actions: read
-  contents: read
+  actions: write
+  contents: write
+  deployments: write
+  packages: write
+  pages: write
+  pull-requests: write
+  security-events: write
 
 jobs:
   main:
@@ -84,4 +91,4 @@ jobs:
 
       - name: Build and push production containers
         # we need to explicitly pass INPUT_GITHUB_TOKEN here or docker will fail with a missing input error
-        run: INPUT_GITHUB_TOKEN=${{ secrets.GITHUB_TOKEN }} node_modules/.bin/nx affected --target=container --base=${NX_BASE} --head=${NX_HEAD} --parallel --verbose
+        run: INPUT_GITHUB_TOKEN=${{ secrets.GITHUB_TOKEN }} node_modules/.bin/nx affected --target=container --base=${NX_BASE} --head=${NX_HEAD} --parallel --push
