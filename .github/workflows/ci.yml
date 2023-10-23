@@ -7,10 +7,10 @@ on:
 
 env:
   NX_CLOUD_DISTRIBUTED_EXECUTION: false # this disables DTE
-  NX_BRANCH: ${{ github.event.number || github.ref_name }}
-  NX_CLOUD_ACCESS_TOKEN: ${{ secrets.NX_CLOUD_ACCESS_TOKEN }}
+  # NX_BRANCH: ${{ github.event.number || github.ref_name }}
+  # NX_CLOUD_ACCESS_TOKEN: ${{ secrets.NX_CLOUD_ACCESS_TOKEN }}
   # this is needed if our pipeline publishes to npm
-  NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
+  # NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
   # this is needed if our pipeline publishes GitHub packages
   GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
@@ -51,11 +51,8 @@ jobs:
       - name: Install dependencies
         run: yarn --frozen-lockfile
 
-      - name: Run pipeline commands
-        run: |
-          yarn nx format:check
-          yarn nx affected --parallel --target=lint
-          yarn nx affected --parallel --target=test --coverage
-          yarn nx affected --parallel --target=build
-          yarn nx affected --parallel --target=container
-          exit 0
+      - run: yarn nx format:check
+      - run: yarn nx affected --parallel --target=lint
+      - run: yarn nx affected --parallel --target=test --coverage
+      - run: yarn nx affected --parallel --target=build
+      - run: yarn nx affected --parallel --target=container
