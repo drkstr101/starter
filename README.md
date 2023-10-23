@@ -2,10 +2,7 @@
 
 ## Objective
 
-This project aims to provide a starting point for developing an enterprise-grade full-stack
-application on top of Express and NextJs. The only business logic (a.k.a. "feature") is a single
-landing page displaying a welcome message. Everything else in this project focuses on providing
-an ideal Developer Experience (DX) for adding new features to this base platform.
+This project aims to provide a starting point for developing an enterprise-grade full-stack application on top of Express and NextJs. The only business logic (a.k.a. "feature") is a single landing page displaying a welcome message. Everything else in this project focuses on providing an ideal Developer Experience (DX) for adding new features to this base platform.
 
 ## Getting Started
 
@@ -15,12 +12,18 @@ an ideal Developer Experience (DX) for adding new features to this base platform
 
 ### System Requirements
 
-All requirements are met by clicking the _Open in Gitpod_ link above. You will need to register a
-free account and be prepared to wait about 10 minutes the first time you open it for the image to
-be built and cached.
+Requires node 18 or node 20 with yarn installed. This project has been pre-configured for VSCode and GitPod. Click the `Open in Gitpod` button above to launch the project in a fully working development environment with all needed dependencies installed.
 
-Otherwise one may use any system with docker and node 18 or 20 installed. This project has been
-pre-configured for VSCode.
+### Managing Secrets
+
+This project is configured to load secrets from an environment vault. See <https://www.dotenv.org/docs/> for more info.
+
+#### Supported config values
+
+- `GITHUB_USER` - Publish to GitHub
+- `GITHUB_TOKEN` - Publish to GitHub
+- `NPM_TOKEN` - Publish to npm
+- `NX_CLOUD_ACCESS_TOKEN` - Use distributed task execution (override default)
 
 ### Start the app
 
