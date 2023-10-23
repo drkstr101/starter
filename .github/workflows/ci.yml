@@ -78,4 +78,4 @@ jobs:
         run: node_modules/.bin/nx affected --target=build --base=${NX_BASE} --head=${NX_HEAD} --parallel
 
       - name: Build and push production containers
-        run: node_modules/.bin/nx affected --target=container --base=${NX_BASE} --head=${NX_HEAD} --parallel --push
+        run: INPUT_GITHUB_TOKEN=${{ secrets.GITHUB_TOKEN }} node_modules/.bin/nx affected --target=container --base=${NX_BASE} --head=${NX_HEAD} --parallel --push
