@@ -15,7 +15,11 @@ jobs:
       - uses: nrwl/nx-set-shas@v3
       - run: yarn install --frozen-lockfile
 
-      - run: yarn format:check
-      - run: yarn affected -t lint --parallel=3
-      - run: yarn affected -t test --parallel=3
-      - run: yarn affected -t build --parallel=3
+      - name: Run pipeline commands
+        run: |
+          yarn nx format:check
+          yarn nx affected --parallel --target=lint
+          yarn nx affected --parallel --target=test --coverage
+          yarn nx affected --parallel --target=build
+          yarn nx affected --parallel --target=container
+          exit 0
