@@ -4,7 +4,7 @@
   "license": "MIT",
   "private": true,
   "scripts": {
-    "format": "nx format",
+    "format": "prettier --write .",
     "lint": "nx format:check && nx run-many --target=lint --parallel --fix",
     "test": "nx run-many --target=test --parallel --coverage -- --runInBand",
     "build": "nx run-many --target=build --parallel",
