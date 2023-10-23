@@ -95,7 +95,8 @@
         "npm": false,
         "github": true,
         "changelog": true,
-        "tagFormat": "minimal-home-v${VERSION}"
+        "branches": ["hello"],
+        "tagFormat": "home-v${VERSION}"
       }
     }
   },
