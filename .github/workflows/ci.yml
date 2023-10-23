@@ -5,6 +5,12 @@ on:
       - main
   pull_request:
 
+env:
+  # this is needed if our pipeline publishes to npm
+  NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
+  # this is needed if our pipeline publishes GitHub packages
+  GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
 jobs:
   main:
     runs-on: ubuntu-latest
@@ -21,5 +27,5 @@ jobs:
           yarn nx affected --parallel --target=lint
           yarn nx affected --parallel --target=test --coverage
           yarn nx affected --parallel --target=build
-          yarn nx affected --parallel --target=container
+          yarn nx affected --parallel --target=container --push
           exit 0
