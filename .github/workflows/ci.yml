@@ -8,11 +8,8 @@ on:
   workflow_dispatch:
 
 env:
+  # Enable distributed task execution in main job
   NX_CLOUD_DISTRIBUTED_EXECUTION: true
-  NX_BRANCH: ${{ github.event.number || github.ref_name }}
-  NX_CLOUD_ACCESS_TOKEN: ${{ secrets.NX_CLOUD_ACCESS_TOKEN }}
-  NX_CLOUD_AUTH_TOKEN: ${{ secrets.NX_CLOUD_AUTH_TOKEN }}
-  NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
   # Make the GITHUB_TOKEN available to running nx tasks
   GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
@@ -31,13 +28,14 @@ jobs:
       main-branch-name: main
       number-of-agents: 3
       init-commands: |
-        yarn nx-cloud start-ci-run --stop-agents-after="build" --agent-count=3
+        yarn nx-cloud start-ci-run --stop-agents-after="container" --agent-count=3
       parallel-commands: |
         yarn nx-cloud record -- yarn nx format:check
       parallel-commands-on-agents: |
         yarn nx affected --target=lint --parallel=3
         yarn nx affected --target=test --parallel=3 --ci --code-coverage -- --runInBand
         yarn nx affected --target=build --parallel=3
+        yarn nx affected --target=container --parallel=3 --push
 
   agents:
     name: CI - Setup Build Agents
@@ -45,57 +43,60 @@ jobs:
     with:
       number-of-agents: 3
 
-  containers:
-    name: CI - Build Containers
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v3
-        name: Checkout [Pull Request]
-        if: ${{ github.event_name == 'pull_request' }}
-        with:
-          # By default, PRs will be checked-out based on the Merge Commit, but we want the actual branch HEAD.
-          ref: ${{ github.event.pull_request.head.sha }}
-          # We need to fetch all branches and commits so that Nx affected has a base to compare against.
-          fetch-depth: 0
+  # containers:
+  #   name: CI - Build Containers
+  #   runs-on: ubuntu-latest
+  #   env:
+  #     # Disable distributed task execution when building containers
+  #     NX_CLOUD_DISTRIBUTED_EXECUTION: false
+  #   steps:
+  #     - uses: actions/checkout@v3
+  #       name: Checkout [Pull Request]
+  #       if: ${{ github.event_name == 'pull_request' }}
+  #       with:
+  #         # By default, PRs will be checked-out based on the Merge Commit, but we want the actual branch HEAD.
+  #         ref: ${{ github.event.pull_request.head.sha }}
+  #         # We need to fetch all branches and commits so that Nx affected has a base to compare against.
+  #         fetch-depth: 0
 
-      - uses: actions/checkout@v3
-        name: Checkout [Default Branch]
-        if: ${{ github.event_name != 'pull_request' }}
-        with:
-          # We need to fetch all branches and commits so that Nx affected has a base to compare against.
-          fetch-depth: 0
+  #     - uses: actions/checkout@v3
+  #       name: Checkout [Default Branch]
+  #       if: ${{ github.event_name != 'pull_request' }}
+  #       with:
+  #         # We need to fetch all branches and commits so that Nx affected has a base to compare against.
+  #         fetch-depth: 0
 
-      # Set node/npm/yarn versions using volta
-      - uses: volta-cli/action@v4
-        with:
-          package-json-path: '${{ github.workspace }}/package.json'
+  #     # Set node/npm/yarn versions using volta
+  #     - uses: volta-cli/action@v4
+  #       with:
+  #         package-json-path: '${{ github.workspace }}/package.json'
 
-      # Use package manager cache for faster installs
-      - name: Use the package manager cache if available
-        uses: actions/cache@v3
-        with:
-          path: '${{ github.workspace }}/.yarn/cache'
-          key: ${{ runner.os }}-${{ hashFiles('**/yarn.lock') }}
-          restore-keys: |
-            ${{ runner.os }}-
+  #     # Use package manager cache for faster installs
+  #     - name: Use the package manager cache if available
+  #       uses: actions/cache@v3
+  #       with:
+  #         path: '${{ github.workspace }}/.yarn/cache'
+  #         key: ${{ runner.os }}-${{ hashFiles('**/yarn.lock') }}
+  #         restore-keys: |
+  #           ${{ runner.os }}-
 
-      - name: Install dependencies
-        run: yarn --frozen-lockfile
+  #     - name: Install dependencies
+  #       run: yarn --frozen-lockfile
 
-      - name: Derive appropriate SHAs for base and head for `nx affected` commands
-        uses: nrwl/nx-set-shas@v3
-        with:
-          # Change this to the target base branch for comparison, if needed
-          main-branch-name: main
+  #     - name: Derive appropriate SHAs for base and head for `nx affected` commands
+  #       uses: nrwl/nx-set-shas@v3
+  #       with:
+  #         # Change this to the target base branch for comparison, if needed
+  #         main-branch-name: main
 
-      # Auto-authenticate with github container registry
-      - name: Login to GitHub container registry
-        uses: docker/login-action@v3
-        with:
-          registry: ghcr.io
-          username: ${{ github.actor }}
-          password: ${{ secrets.GITHUB_TOKEN }}
+  #     # Auto-authenticate with github container registry
+  #     - name: Login to GitHub container registry
+  #       uses: docker/login-action@v3
+  #       with:
+  #         registry: ghcr.io
+  #         username: ${{ github.actor }}
+  #         password: ${{ secrets.GITHUB_TOKEN }}
 
-      # Build all images and push to registry
-      - name: Build production containers
-        run: yarn nx affected --target=container --parallel=3 --push
+  #     # Build all images and push to registry
+  #     - name: Build production containers
+  #       run: yarn nx run-many --target=container --parallel=3 --push
