@@ -77,7 +77,7 @@
       "options": {
         "engine": "docker",
         "metadata": {
-          "images": ["starter-home"],
+          "images": ["ghcr.io/drkstr101/starter-home"],
           "load": true,
           "tags": [
             "type=schedule",
