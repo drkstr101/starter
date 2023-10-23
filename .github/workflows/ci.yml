@@ -20,13 +20,16 @@ permissions:
 
 jobs:
   check:
-    name: CI - Check Code Quality
+    name: CI - Main Job
     # use the nx-cloud template to run parallel tasks on seperate agents
     uses: nrwl/ci/.github/workflows/nx-cloud-main.yml@v0.13.1
     with:
       # set working branch to main
       main-branch-name: main
       number-of-agents: 3
+      environment-variables:
+        # Make the GITHUB_TOKEN available to running nx tasks
+        GITHUB_TOKEN=${{ secrets.GITHUB_TOKEN }}
       init-commands: |
         yarn nx-cloud start-ci-run --stop-agents-after="container" --agent-count=3
       parallel-commands: |
